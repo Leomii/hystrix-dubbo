@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://code.alibabatech.com/schema/dubbo    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <dubbo:application name="hystrix-dubbo-consumer"/>
+
+    <dubbo:registry address="zookeeper://172.17.16.95:62181"/>
+
+    <dubbo:consumer>
+        <dubbo:parameter key="ThreadPoolCoreSize" value="3"/>
+    </dubbo:consumer>
+
+    <dubbo:reference id="helloService" interface="com.leomii.service.HelloService" timeout="10000"/>
+
+    <bean id="welcomeService" class="com.leomii.consumer.service.impl.WelcomeServiceImpl">
+        <property name="helloService" ref="helloService"/>
+    </bean>
+</beans>

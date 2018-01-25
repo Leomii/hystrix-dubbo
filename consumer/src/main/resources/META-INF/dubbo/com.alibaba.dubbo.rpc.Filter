@@ -1,0 +1,1 @@
+hystrix=com.leomii.consumer.hystrix.HystrixFilter
