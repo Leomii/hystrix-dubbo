@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2018-1-25
  */
 public class ConsumerMain {
+    private static final int COUNT =20;
     public static void main(String[] args) throws IOException {
 
 
@@ -22,7 +23,7 @@ public class ConsumerMain {
         ExecutorService executorService = new ThreadPoolExecutor(5, 200,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024), new SelfDefinedThreadFactory("dubbo-hystrix-consumer"), new ThreadPoolExecutor.AbortPolicy());
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < COUNT; i++) {
             executorService.submit(new Runnable() {
 
                 public void run() {

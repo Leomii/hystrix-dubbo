@@ -6,7 +6,6 @@ import com.alibaba.dubbo.rpc.Invoker;
 import com.alibaba.dubbo.rpc.Result;
 import com.netflix.hystrix.*;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author leomii
@@ -22,27 +21,22 @@ public class DubboHystrixCommand extends HystrixCommand<Result> {
     /**
      * 线程池大小 x
      */
-    @Value("#{default.threadpool.core.size}")
     private static int DEFAULT_THREADPOOL_CORE_SIZE = 30;
     /**
      * 10秒钟内至少 x 次请求失败，熔断器发挥作用
      */
-    @Value("#{circuit.breaker.request.volume.threshold}")
     private static int CIRCUIT_BREAKER_REQUEST_VOLUME_THRESHOLD = 20;
     /**
      * 熔断器中断请求 x 秒后会进入半打开状态,放部分流量过去重试
      */
-    @Value("#{circuit.breaker.sleep.window.in.milliseconds}")
     private static int CIRCUIT_BREAKER_SLEEP_WINDOW_IN_MILLISECONDS = 30000;
     /**
      * 错误率达到 x 开启熔断保护
      */
-    @Value("#{circuit.breaker.error.threshold.percentage}")
     private static int CIRCUIT_BREAKER_ERROR_THRESHOLD_PERCENTAGE = 50;
     /**
      * 使用dubbo的超时，禁用这里的超时
      */
-    @Value("#{execution.timeout.enabled}")
     private static int EXECUTION_TIMEOUT_ENABLED = 0;
 
 
@@ -54,12 +48,18 @@ public class DubboHystrixCommand extends HystrixCommand<Result> {
                         .withCircuitBreakerRequestVolumeThreshold(CIRCUIT_BREAKER_REQUEST_VOLUME_THRESHOLD)
                         .withCircuitBreakerSleepWindowInMilliseconds(CIRCUIT_BREAKER_SLEEP_WINDOW_IN_MILLISECONDS)
                         .withCircuitBreakerErrorThresholdPercentage(CIRCUIT_BREAKER_ERROR_THRESHOLD_PERCENTAGE)
-                        .withExecutionTimeoutEnabled(EXECUTION_TIMEOUT_ENABLED == 0 ? false : true))
+                        .withExecutionTimeoutEnabled(EXECUTION_TIMEOUT_ENABLED == 0 ? false : true)
+                )
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter().withCoreSize(getThreadPoolCoreSize(invoker.getUrl()))));
 
 
         this.invoker = invoker;
         this.invocation = invocation;
+    }
+
+    @Override
+    public Result getFallback() {
+        return null;
     }
 
     /**
