@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+
 public class ForkJoinPool<T> {
 
-    private final static Logger logger = LoggerFactory
-            .getLogger(ForkJoinPool.class);
+    private final static Logger logger = LoggerFactory.getLogger(ForkJoinPool.class);
 
-    public static final int AVAILABLE_PROCESSORS_SIZE = Runtime.getRuntime()
-            .availableProcessors();
+    public static final int AVAILABLE_PROCESSORS_SIZE = Runtime.getRuntime().availableProcessors();
 
     private ListeningExecutorService executorService = null;
 
@@ -27,8 +26,6 @@ public class ForkJoinPool<T> {
         protected java.util.List<ListenableFuture<T>> initialValue() {
             return Lists.newArrayList();
         }
-
-        ;
     };
 
     public ForkJoinPool() {
@@ -177,7 +174,7 @@ public class ForkJoinPool<T> {
     }
 
     public static void main(String[] args) {
-        ForkJoinPool<Boolean> forkJoinPool = new ForkJoinPool<>(4);
+        ForkJoinPool<Boolean> forkJoinPool = new ForkJoinPool<>(20);
         forkJoinPool.addTask(new BlackListA());
         forkJoinPool.addTask(new BlackListB());
         forkJoinPool.addTask(new BlackListC());
@@ -185,6 +182,13 @@ public class ForkJoinPool<T> {
         forkJoinPool.addTask(new BlackListE());
         List<Boolean> booleans = forkJoinPool.executeTask();
         forkJoinPool.shutdown();
-        System.out.println(booleans);
+
+        boolean flag =false;
+
+        for(Boolean b: booleans)
+        {
+            flag = flag || b;
+        }
+        System.out.println(flag);
     }
 }
