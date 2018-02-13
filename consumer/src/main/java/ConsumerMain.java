@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
  * @since 2018-1-25
  */
 public class ConsumerMain {
-    private static final int COUNT =20;
+    private static final int COUNT = 20;
+
     public static void main(String[] args) throws IOException {
 
 
@@ -26,9 +27,10 @@ public class ConsumerMain {
         for (int i = 0; i < COUNT; i++) {
             executorService.submit(new Runnable() {
 
+                @Override
                 public void run() {
                     try {
-                        System.out.println(hello.welcome("leomii"));
+                        hello.welcome("leomii");
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }

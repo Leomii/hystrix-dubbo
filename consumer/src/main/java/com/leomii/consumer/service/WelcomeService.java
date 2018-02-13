@@ -13,4 +13,6 @@ public interface WelcomeService {
      * @return String 招呼字符串
      */
     String welcome(String name);
+
+    String hello(String name);
 }

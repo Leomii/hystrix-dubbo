@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-http://code.alibabatech.com/schema/dubbo    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
 
     <dubbo:application name="hystrix-dubbo-consumer"/>
 
-    <dubbo:registry address="zookeeper://172.17.16.95:62181"/>
-
-    <dubbo:consumer>
-        <dubbo:parameter key="ThreadPoolCoreSize" value="3"/>
-    </dubbo:consumer>
+    <dubbo:registry address="zookeeper://172.17.16.95:2181"/>
 
     <dubbo:reference id="helloService" interface="com.leomii.service.HelloService" timeout="10000"/>
+
 
     <bean id="welcomeService" class="com.leomii.consumer.service.impl.WelcomeServiceImpl">
         <property name="helloService" ref="helloService"/>
     </bean>
+
+    <bean id="advices" class="com.leomii.consumer.aop.HystrixAdvices"/>
+
+
+    <!-- aop配置 -->
+    <aop:config proxy-target-class="true">
+        <!--切面 -->
+        <aop:aspect ref="advices">
+            <!-- 切点 -->
+            <aop:pointcut expression="execution(* com.leomii.consumer.service.*.*(..))" id="hystrixPointcut"/>
+            <aop:around method="around" pointcut-ref="hystrixPointcut"/>
+        </aop:aspect>
+    </aop:config>
 </beans>

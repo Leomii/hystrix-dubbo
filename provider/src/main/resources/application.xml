@@ -5,7 +5,9 @@
 
     <dubbo:application name="hystrix-dubbo-provider"/>
 
-    <dubbo:registry address="zookeeper://172.17.16.95:62181"/>
+    <dubbo:registry address="zookeeper://172.17.16.95:2181"/>
+
+    <dubbo:provider filter="PreLogFilter,PreLogFilterA"/>
 
     <dubbo:protocol name="dubbo" port="20880"/>
 
